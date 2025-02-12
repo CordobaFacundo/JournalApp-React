@@ -1,7 +1,6 @@
-import { Link as RouterLink } from 'react-router-dom'
-import { Google } from '@mui/icons-material'
-import { Button, Grid, Link, TextField, Typography } from '@mui/material'
 import React from 'react'
+import { Link as RouterLink } from 'react-router-dom'
+import { Button, Grid, Link, TextField, Typography } from '@mui/material'
 import { AuthLayout } from '../layout/AuthLayout'
 import { useForm } from '../../hooks'
 
@@ -11,9 +10,27 @@ const formData = {
   displayName: 'Facundo Cordoba'
 }
 
+const formValidations = {
+  email: [ (value) => value.includes('@', 'Invalid email')],
+  password: [ (value) => value.length >= 6, 'This password is not secure'],
+  displayName: [ (value) => value.length >= 1, 'You need a username'],
+}
+
 export const RegisterPage = () => {
 
-const { displayName, email, password, onInputChange, formState } = useForm(formData);
+const { 
+  formState,
+  displayName,
+  email,
+  password,
+  onInputChange,
+  isFormValid,
+  displayNameValid,
+  emailValid,
+  passwordValid,
+} = useForm(formData, formValidations);
+
+console.log(displayNameValid);
 
 const onSubmit = (event) => {
   event.preventDefault();
@@ -35,6 +52,8 @@ const onSubmit = (event) => {
               name="displayName"
               value={ displayName }
               onChange={ onInputChange }
+              error={ !displayNameValid }
+              helperText={ displayNameValid }
             />
           </Grid>
 
