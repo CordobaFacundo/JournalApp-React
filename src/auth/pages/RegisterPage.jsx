@@ -3,31 +3,52 @@ import { Google } from '@mui/icons-material'
 import { Button, Grid, Link, TextField, Typography } from '@mui/material'
 import React from 'react'
 import { AuthLayout } from '../layout/AuthLayout'
+import { useForm } from '../../hooks'
+
+const formData = {
+  email: 'facu@google.com',
+  password: 12345,
+  displayName: 'Facundo Cordoba'
+}
 
 export const RegisterPage = () => {
+
+const { displayName, email, password, onInputChange, formState } = useForm(formData);
+
+const onSubmit = (event) => {
+  event.preventDefault();
+  console.log(formState);
+}
+
   return (
 
     <AuthLayout title='Register'>
-      <form>
+      <form onSubmit={ onSubmit }>
         <Grid container>
 
           <Grid item xs={12} sx={{ mt: 2 }}>
             <TextField
-              label="Name"
+              label="Complete Name"
               type="text"
               placeholder="Enter your name"
               fullWidth
+              name="displayName"
+              value={ displayName }
+              onChange={ onInputChange }
             />
           </Grid>
 
-          <Grid item xs={12} sx={{ mt: 2 }}>
+          {/* <Grid item xs={12} sx={{ mt: 2 }}>
             <TextField
               label="Last name"
               type="text"
               placeholder="Enter your last name"
               fullWidth
+              name="email"
+              value={ email }
+              onChange={ onInputChange }
             />
-          </Grid>
+          </Grid> */}
 
           <Grid item xs={12} sx={{ mt: 2 }}>
             <TextField
@@ -35,6 +56,9 @@ export const RegisterPage = () => {
               type="email"
               placeholder="Enter your email address"
               fullWidth
+              name="email"
+              value={ email }
+              onChange={ onInputChange }
             />
           </Grid>
 
@@ -44,12 +68,15 @@ export const RegisterPage = () => {
               type="password"
               placeholder="Enter your password"
               fullWidth
+              name="password"
+              value={ password }
+              onChange={ onInputChange }
             />
           </Grid>
 
           <Grid container spacing={2} sx={{ mb: 2, mt: 1 }}>
             <Grid item xs={12}>
-              <Button variant='contained' fullWidth>
+              <Button type='submit' variant='contained' fullWidth>
                 Sing up
               </Button>
             </Grid>
