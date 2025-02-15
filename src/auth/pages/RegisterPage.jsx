@@ -3,6 +3,8 @@ import { Link as RouterLink } from 'react-router-dom'
 import { Button, Grid, Link, TextField, Typography } from '@mui/material'
 import { AuthLayout } from '../layout/AuthLayout'
 import { useForm } from '../../hooks'
+import { useDispatch } from 'react-redux'
+import { startCreatingUserWithEmailPassword } from '../../store/auth/thunks'
 
 const formData = {
   email: '',
@@ -11,39 +13,41 @@ const formData = {
 }
 
 const formValidations = {
-  email: [ (value) => value.includes('@'), 'Invalid email'],
-  password: [ (value) => value.length >= 6, 'This password is not secure'],
-  displayName: [ (value) => value.length >= 1, 'You need a username'],
+  email: [(value) => value.includes('@'), 'Invalid email'],
+  password: [(value) => value.length >= 6, 'This password is not secure'],
+  displayName: [(value) => value.length >= 1, 'You need a username'],
 }
 
 export const RegisterPage = () => {
+  const dispatch = useDispatch()
 
-const [formSubmitted, setFormSubmitted] = useState(false);
+  const [formSubmitted, setFormSubmitted] = useState(false);
 
-const { 
-  formState,
-  displayName,
-  email,
-  password,
-  onInputChange,
-  isFormValid,
-  displayNameValid,
-  emailValid,
-  passwordValid,
-} = useForm(formData, formValidations);
+  const {
+    formState,
+    displayName,
+    email,
+    password,
+    onInputChange,
+    isFormValid,
+    displayNameValid,
+    emailValid,
+    passwordValid,
+  } = useForm(formData, formValidations);
 
 
-const onSubmit = (event) => {
-  event.preventDefault();
-  setFormSubmitted(true);
-  console.log(formState);
-}
+  const onSubmit = (event) => {
+    event.preventDefault();
+    setFormSubmitted(true);
+    if (!isFormValid) return;
+    dispatch(startCreatingUserWithEmailPassword(formState));
+  }
 
   return (
 
     <AuthLayout title='Register'>
       {/* <h1>FormValid {isFormValid ? 'valido' : 'incorrecto'}</h1> */}
-      <form onSubmit={ onSubmit }>
+      <form onSubmit={onSubmit}>
         <Grid container>
 
           <Grid item xs={12} sx={{ mt: 2 }}>
@@ -53,10 +57,10 @@ const onSubmit = (event) => {
               placeholder="Enter your name"
               fullWidth
               name="displayName"
-              value={ displayName }
-              onChange={ onInputChange }
-              error={ !!displayNameValid && formSubmitted }
-              helperText={ displayNameValid }
+              value={displayName}
+              onChange={onInputChange}
+              error={!!displayNameValid && formSubmitted}
+              helperText={displayNameValid}
             />
           </Grid>
 
@@ -79,10 +83,10 @@ const onSubmit = (event) => {
               placeholder="Enter your email address"
               fullWidth
               name="email"
-              value={ email }
-              onChange={ onInputChange }
-              error={ !!emailValid && formSubmitted }
-              helperText={ emailValid }
+              value={email}
+              onChange={onInputChange}
+              error={!!emailValid && formSubmitted}
+              helperText={emailValid}
             />
           </Grid>
 
@@ -93,10 +97,10 @@ const onSubmit = (event) => {
               placeholder="Enter your password"
               fullWidth
               name="password"
-              value={ password }
-              onChange={ onInputChange }
-              error={ !!passwordValid && formSubmitted }
-              helperText={ passwordValid }
+              value={password}
+              onChange={onInputChange}
+              error={!!passwordValid && formSubmitted}
+              helperText={passwordValid}
 
             />
           </Grid>
